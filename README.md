@@ -49,4 +49,4 @@ Last but not least dont forget to visit http://rpiIP:5000/api/power to see your 
 
 [Power.pdf](https://github.com/chrgeogit/energy_consumption/files/12646828/Power.pdf)
 
-![Uploading power.png…]()
+ ![Uploading power1.png…]()
