@@ -30,5 +30,8 @@ install python3 and flask
 
 check the services files and put the files in the directory mentioned there
 
+![dds238](https://github.com/chrgeogit/energy/assets/144347707/1ee61b00-2d39-4d74-8952-732f1df2508a)
+
+
 
 
