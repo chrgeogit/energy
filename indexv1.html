@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ title }}</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+</head>
+
+<body>
+
+    <h1>{{ title }}</h1>
+<h2>"Voltage variance"<h2>
+    <canvas id="chartv" width="600" height="400"></canvas>
+    <script>
+
+      // bar chart data
+      var barData = {
+        labels : [
+          {% for item in labels %}
+            "{{ item }}",
+          {% endfor %}
+        ],
+
+        datasets : [{
+          data : [
+	    {% for item in values %}
+              {{ item }},
+            {% endfor %}]
+          }
+	]
+      }
+      console.log(barData.labels);
+      console.log(barData.datasets);
+     
+      Chart.defaults.global.scaleFontSize = 16;
+      
+      // get bar chart canvas
+      var mychart = document.getElementById("chartv").getContext("2d");
+      
+      steps = 10
+      max = {{ max }}
+      // draw bar chart
+     // barData.datasets[0].data
+     var myChart = new Chart(mychart, {
+   type: 'line',
+   data: {
+       labels:  barData.labels, 
+       datasets: [{
+           label: 'time',
+           data:  barData.datasets[0].data, // Data on Y axis  
+           borderWidth: 1,
+           borderColor: "#084de0", // Place your color here
+           pointRadius: 1
+          }]
+   },
+options: {
+    responsive: true,
+    scales: {
+                    xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'VOLTAGE'
+                            }
+                        }],
+                    yAxes: [{
+                            display: true,
+                            ticks: {
+                                beginAtZero: true,
+                                steps: 10,
+                                stepValue: 5,
+                                min: {{min}},
+                                max: {{max}}
+                            }
+                        }]
+                }
+  }
+
+
+});
+  
+    </script>
+
+</body>
+</html>

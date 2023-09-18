@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ title }}</title>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script> <body>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<style>
+* {
+  box-sizing: border-box;
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 50%;
+  padding: 10px;
+  height: 50px; /* Should be removed. Only for demonstration */
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+</style>
+</head>
+<body>
+<h1>{{ title }}</h1>
+<h2>"energy"<h2>
+<input type="text" id="rangePicker"  name="datetimes" />
+<button type="button" onclick="getInputValue()">
+      Get Value From Input
+</button>
+ <h3>Output:</h3>
+    <p id="output"></p>
+<div class="row">
+  <div  class="column"> <p id="output2"></p></div>
+  <div class="column"> <p id="output3"></p></div>
+</div>
+<div class="row">
+  <div  class="column"> <p id="output4"></p></div>
+ </div>
+
+<canvas id="charten" width="600" height="400"></canvas>
+  <script>
+     $(function() {
+      $('input[name="datetimes"]').daterangepicker({
+        timePicker: true,
+        startDate: moment().startOf('hour'),
+        endDate: moment().startOf('hour').add(32, 'hour'),
+        locale: {
+          format: 'YYYY-MM-DD hh:mm A'
+       }
+      });
+    });
+    function getInputValue() {
+        let inputValue = document.getElementById("rangePicker").value;
+        document.getElementById("output").innerHTML = inputValue;
+	var result =inputValue.split('-');
+        
+        var year1 = result[0];
+        var month1 = result[1];
+        var daytime1 = result[2].trim();
+        var day1 = daytime1.slice(0, 2);
+        var time1 = daytime1.slice(3);
+        var stringtime1 = time1.slice(0,5);
+        var stringtimehours1 = stringtime1.slice(0,2);
+        var timehours1 =  parseInt(stringtimehours1, 10);
+        var stringtimeminutes1 = stringtime1.slice(-2);
+        var timeninutes1 =  parseInt(stringtimeminutes1, 10);
+        if (time1.slice(-2)=='PM')
+           {
+            timehours1 = timehours1 + 12;
+            stringtimehours1  = timehours1.toString();
+	   }
+        var year2 = result[3];
+        var month2 = result[4];
+        var daytime2 = result[5].trim();
+        var day2 = daytime2.slice(0,2);
+        var time2 = daytime2.slice(3);
+        var stringtime2 = time2.slice(0,5);
+        var stringtimehours2 = stringtime2.slice(0,2);
+        var timehours2 =  parseInt(stringtimehours2, 10);
+        var stringtimeminutes2 = stringtime2.slice(-2);
+        var timeninutes2 =  parseInt(stringtimeminutes2, 10);
+        if (time2.slice(-2)=='PM')
+           {
+            timehours2 = timehours2 + 12
+            stringtimehours2  = timehours2.toString();
+           }
+
+console.log("----------------------");
+
+console.log(year1 + "-"+ month1+"-"+day1); 
+ 
+console.log(year2.trim() + "-"+ month2+"-"+day2.trim());
+                
+var startIndex1 =  barData.labels.findIndex(el => el.includes(year1 + "-"+ month1+"-"+day1)) ;
+console.log(startIndex1); 
+
+var energyValue1 = barData.datasets[0].data[startIndex1]; document.getElementById("output2").innerHTML = energyValue1; 
+/*----------------------------------------*/
+ 
+
+var matchdate2 =  barData.labels.reduce(function(arr, e, i) {
+    if (e.includes(year2.trim()+"-"+month2.trim()+"-"+day2.trim())) 
+	arr.push(i);
+    return arr;
+  }, [])
+
+console.log(matchdate2);
+
+/*var startIndex2 = barData.labels.findIndex(el => el.includes(year2 + "-"+ month2+"-"+day2));*/
+var energyValue2 =  barData.datasets[0].data[matchdate2[0]];
+document.getElementById("output3").innerHTML = energyValue2;
+var kwh1 = parseFloat(energyValue1);
+var kwh2 = parseFloat(energyValue2);
+var deltaEnergy  = kwh2-kwh1;
+document.getElementById("output4").innerHTML = deltaEnergy;
+     }
+          
+    // bar chart data
+      var barData = {
+        labels : [
+          {% for item in labels %}
+            "{{ item }}",
+          {% endfor %}
+        ],
+
+        datasets : [{
+          data : [
+	    {% for item in values %}
+              {{ item }},
+            {% endfor %}]
+          }
+	]
+      }
+      console.log(barData.labels);
+      console.log(barData.datasets);
+     
+      
+      Chart.defaults.global.scaleFontSize = 16;
+      
+      // get bar chart canvas
+      var mychart = document.getElementById("charten").getContext("2d");
+      
+      steps = 10
+      max = {{ max }}
+      // draw bar chart
+     // barData.datasets[0].data
+     var myChart = new Chart(mychart, {
+   type: 'line',
+   data: {
+       labels:  barData.labels, 
+       datasets: [{
+           label: 'ATHROISTIKH ENDEIKSH METRHTH (apo 24/11/22 data come from heat pump)',
+           data:  barData.datasets[0].data, // Data on Y axis  
+           borderWidth: 1,
+           borderColor: "#084de0", // Place your color here
+           pointRadius: 1
+          }]
+   },
+   options: {
+    responsive: false,
+    scales: {
+                    xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'TIME'
+                            }
+                        }],
+                    yAxes: [{
+                            display: true,
+                            ticks: {
+                                beginAtZero: true,
+                                steps: 10,
+                                stepValue: 5,
+                                min: {{min}},
+                                max: {{max}}
+                            }
+                        }]
+                }
+  }
+
+});
+</script>
+
+</body>
+</html>

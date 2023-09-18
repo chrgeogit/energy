@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39" />
+    <meta charset="utf-8" />
+    <title>{{title}}</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/1.2.1/chartjs-plugin-zoom.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <style>
+* {
+  box-sizing: border-box;
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 50%;
+  padding: 10px;
+  height: 50px; /* Should be removed. Only for demonstration */
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+</style>
+  </head>
+  <body>
+  <h1>{{title}}</h1>
+  <h2>POWER - KW</h2>
+  <form>
+  <input type="text" id="rangePicker" name="datetimes" /> 
+  <button type="button" onclick="getInputValue()">Get Value From Input</button></form>
+  <h3>Output:</h3>
+  <p id="output"></p>
+  <div class="row">
+    <div class="column">
+      <p id="output2"></p>
+    </div>
+    <div class="column">
+      <p id="output3"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column">
+      <p id="output4"></p>
+    </div>
+  </div>
+  <canvas id="chartp" width="600" height="400"></canvas> 
+<script> 
+
+// bar chart data
+ // bar chart data
+      var barData = { labels : [ {% for item in labels %} "{{ item }}", {% endfor %} ], datasets : [{ data : [ {% for item in values %} {{ item }}, {% endfor %}]
+          }
+        ]
+      }
+/*Chart.defaults.global.scaleFontSize = 16;*/
+// get bar chart canvas
+var mychart = document.getElementById("chartp").getContext("2d"); steps = 10; max = {{ max }};
+// draw bar chart barData.datasets[0].data;
+  var myChart = new Chart(mychart, { type: 'line', data: { labels: barData.labels.slice(-1358), datasets: [{ label: 'wattHOUR (apo 24/11/22 get data from heat pump)', data: 
+           barData.datasets[0].data.slice(-1358), // Data on Y axis borderWidth: 1, borderColor: "#084de0", // Place your color here pointRadius: 1
+          }]
+   },
+   options: { responsive: true, title: { display: false, text: "{{ title}}" }, legend: { position: 'top' }, elements: { line: { fill: false, backgroundColor: 'white', borderColor: 'blue',
+                               },
+                           point: { backgroundColor: 'blue', hoverBackgroundColor: 'green', hoverRadius: 15, radius : 0.5
+                                   }
+                      },
+            plugins: { zoom: { pan: { enabled: true, mode: 'x'
+                         },
+                    zoom: { wheel:{ enabled: true
+                              },
+                        mode: 'x'
+                          }
+                      }
+                    },
+            scales: { x: { title: { display: true, text: 'Date'
+                                          }
+                                    },
+                                y: { title: { display: true, text: 'Power'
+                                               },
+                                        min: 0, max: 8000, ticks: {
+                                           // forces step size to be 50 units
+                                                stepSize: 50
+                                               }
+                                     }                        
+                         }
+       
+           
+           }            
+});
+    $(function() { $('input[name="datetimes"]').daterangepicker({ timePicker: true, startDate: moment().startOf('hour'), endDate: moment().startOf('hour').add(32, 'hour'), locale: { format: 
+                'YYYY-MM-DD hh:mm A'
+            }
+        });
+    });
+var cutindex1 = 0;
+function getInputValue() { let inputValue = document.getElementById("rangePicker").value; document.getElementById("output").innerHTML = inputValue; var result = 
+ inputValue.split('-'); var year1 = result[0];
+	var month1 = result[1]; var daytime1 = result[2].trim(); var day1 = daytime1.slice(0, 2); var time1 = daytime1.slice(3); var stringtime1 = time1.slice(0, 5); var stringtimehours1 = 
+	stringtime1.slice(0, 2);
+    var timehours1 = parseInt(stringtimehours1, 10); var stringtimeminutes1 = stringtime1.slice(-2); var timeninutes1 = parseInt(stringtimeminutes1, 10); if (time1.slice(-2) == 'PM' && 
+    timehours1<12)
+         { timehours1 = timehours1+12; stringtimehours1 = timehours1.toString();
+   }
+    if (time1.slice(-2) == 'AM' && timehours1 == 12 ) { timehours1 = timehours1-12; stringtimehours1 = timehours1.toString();
+}
+    if (time1.slice(-2) == 'AM' && timehours1 < 10 ) { var zero = "0"; stringtimehours1 = zero + timehours1.toString();
+      }
+    
+   						  
+    var year2 = result[3].trimStart(); var month2 = result[4]; var daytime2 = result[5].trim(); var day2 = daytime2.slice(0, 2); var time2 = daytime2.slice(3); var stringtime2 = 
+	time2.slice(0, 5); var stringtimehours2 = stringtime2.slice(0, 2);
+        var timehours2 = parseInt(stringtimehours2, 10); var stringtimeminutes2 = stringtime2.slice(-2); var timeninutes2 = parseInt(stringtimeminutes2, 10); if (time2.slice(-2) == 'PM' && 
+  timehours2<12)
+         { timehours2 = timehours2+12; stringtimehours2 = timehours2.toString();
+       }
+    if (time2.slice(-2) == 'AM' && timehours2==12) { timehours2 = timehours2-12; stringtimehours2 = timehours2.toString();
+     }
+  if (time2.slice(-2) == 'AM' && timehours2 < 10 ) { var zero = "0"; stringtimehours2 = zero + timehours2.toString();
+      }
+       
+console.log("----------------------"); console.log(year1 + "-" + month1 + "-" + day1); console.log(year2.trim() + "-" + month2 + "-" + day2.trim()); var startIndex1 = 
+barData.labels.findIndex(el => el.includes(year1 + "-" + month1 + "-" + day1+" "+stringtimehours1));
+    console.log(startIndex1); var energyValue1 = barData.datasets[0].data[startIndex1]; document.getElementById("output2").innerHTML = energyValue1; 
+    /*----------------------------------------*/
+var startIndex2 = barData.labels.findIndex(el => el.includes(year2.trim() + "-" + month2.trim() + "-" + day2.trim()+" "+stringtimehours2)); var energyValue2 = 
+	barData.datasets[0].data[startIndex2];
+    document.getElementById("output3").innerHTML = energyValue2; var kwh1 = parseFloat(energyValue1); var kwh2 = parseFloat(energyValue2); var deltaEnergy = kwh2 - kwh1; 
+    document.getElementById("output4").innerHTML = deltaEnergy;
+cutindex1 = barData.labels.findIndex(t => t.includes(year1+"-"+month1+"-"+day1+" "+timehours1+":")); 
+var cutindex2 = barData.labels.findIndex(t => t.includes(year2+"-"+month2+"-"+day2+" "+timehours1+":")); 
+myChart.data.labels = barData.labels.filter(function(item, index){if (index > startIndex1 && index < startIndex2) return true; } ); 
+myChart.data.datasets[0].data = barData.datasets[0].data.filter(function(item, index){if (index >= startIndex1 && index
+	< startIndex2) return true; } );	
+myChart.options.scales.y.min= 0.9*Math.min(...myChart.data.datasets[0].data); 
+myChart.options.scales.y.max= 1.1*Math.max(...myChart.data.datasets[0].data); 
+myChart.update;
+}
+//removedata
+function removeData(chart) { chart.data.labels.pop(); chart.data.datasets.forEach((dataset) => { dataset.data.pop();
+    });
+    chart.update();
+}
+</script></body> </html>
