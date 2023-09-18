@@ -1,3 +1,4 @@
+
 # This is a sample Python script.
 import logging
 # Press Shift+F10 to execute it or replace it with your code.
@@ -18,10 +19,23 @@ from matplotlib.dates import DateFormatter, HourLocator
 import ftplib
 from ftplib import FTP
 from datetime import datetime
-
+from flask import Flask, render_template, request
+from werkzeug.utils import secure_filename
+from werkzeug.datastructures import  FileStorage
 
 app = Flask(__name__,static_url_path="", static_folder="templates")
 CORS(app, resources={r"/*": {"origins": "*"}})
+
+@app.route('/upload')
+def upload_file():
+   return render_template('upload.html')
+
+@app.route('/uploader', methods = ['GET', 'POST'])
+def upload_file2():
+   if request.method == 'POST':
+      f = request.files['file']
+      f.save(secure_filename(f.filename))
+      return 'file uploaded successfully'
 
 @app.route('/api/meses', methods=['GET'])
 def api_get_mes():
@@ -38,6 +52,11 @@ def api_graph_current():
 @app.route('/api/power', methods=['GET'])
 def api_graph_power():
     return graph_power()
+
+@app.route('/api/energyDelta', methods=['GET'])
+def api_energy_delta():
+    return graph_energyDelta()
+
 
 @app.route('/api/energytot', methods=['GET'])
 def api_graph_energytot():
@@ -192,6 +211,35 @@ def graph_power():
     line_labels = df['date']
     line_values = df['powewr']
     return render_template('indexp.html', title='Power', max='100',  labels=line_labels, values=line_values)
+
+def graph_energyDelta():
+    try:
+        # Create a SQL connection to our SQLite database
+        conn = connect_to_db()
+        # print(meses)
+        df = pd.read_sql_query("SELECT * FROM mes", conn)
+        ## Set time format and the interval of ticks (every 15 minutes)
+        df['date'] = pd.to_datetime(df['date'], format='%c')
+        #    df['date']  = datetime.strptime(date_string, "%d %B, %Y")
+        df['energy'] = df['energy'].astype(float)
+        df.plot(kind='line', x='date', y='energyDelta', color='pink', x_compat=True)
+        # use formatters to specify major and minor ticks
+        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%d-%m-%Y-%H-%M'))
+        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
+        plt.gca().xaxis.set_major_locator(mdates.HourLocator(interval=3))
+        plt.show()
+        # Be sure to close the connection
+        plt.savefig('energyDelta.png')
+        plt.savefig('templates/energyDelta.png')
+        conn.close()
+
+    except Exception as e:
+        logging.critical(e, exc_info=True)
+
+    line_labels = df['date']
+    line_values = df['energy']
+    return render_template('indexdelta.html', title='Power', max='100',  labels=line_labels, values=line_values)
+
 
 def graph_energytot():
     y=[]
