@@ -47,3 +47,4 @@ hire a liscenced electrician to mount the below kwh meter it onto mains and rout
 Last but not least dont forget to visit http://rpiIP:5000/api/power to see your power Consumption graph
 
 
+[Power.pdf](https://github.com/chrgeogit/energy_consumption/files/12646828/Power.pdf)
