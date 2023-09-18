@@ -12,7 +12,7 @@ get a raspberry with linux
   ID=raspbian
   ID_LIKE=debian
 
-install services provided
+install and start services provided
 
 install python3 and flask
 
@@ -41,10 +41,9 @@ install database  SQLite 3.x and create "db1" file using below command
 
 check the services files and put the files in the directory mentioned there
 
-hire a liscenced electrician to mount the below kwh meter it onto mains and route its signal to rpi
-
+hire a liscenced electrician to mount the below kwh meter it onto mains and route its rs485 signal to rpi
 ![dds238](https://github.com/chrgeogit/energy/assets/144347707/1ee61b00-2d39-4d74-8952-732f1df2508a)
 
-
+Last but not least dont forget to visit http://rpiIP:5000/api/power to see your power graph
 
 
