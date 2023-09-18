@@ -112,6 +112,8 @@ if __name__ == '__main__':
             response = c.request('europe.pool.ntp.org', version=3)
             if response:
                 print( " NTP Active " + ctime(response.tx_time))
+            else:
+                print("ntp response : " + response)
         except:
             print(" NTP Deactivated")
 
@@ -131,6 +133,7 @@ if __name__ == '__main__':
         print(f'Powerfactor: {d.power_factor}')
         #time.sleep(20)
         d.close_serial()
+        time.sleep(1)
         try:
             sqliteConnection = sqlite3.connect(database)
             cursor = sqliteConnection.cursor()
@@ -140,6 +143,7 @@ if __name__ == '__main__':
             sqliteConnection.commit()
             print("Record inserted successfully into mes table ", cursor.rowcount)
             cursor.close()
+            time.sleep(1)
 
         except sqlite3.Error as error:
             print("Failed to insert data into sqlite table", error)
