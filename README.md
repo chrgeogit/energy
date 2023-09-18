@@ -44,6 +44,6 @@ check the services files and put the files in the directory mentioned there
 hire a liscenced electrician to mount the below kwh meter it onto mains and route its rs485 signal to rpi
 ![dds238](https://github.com/chrgeogit/energy/assets/144347707/1ee61b00-2d39-4d74-8952-732f1df2508a)
 
-Last but not least dont forget to visit http://rpiIP:5000/api/power to see your power graph
+Last but not least dont forget to visit http://rpiIP:5000/api/power to see your power Consumption graph
 
 
