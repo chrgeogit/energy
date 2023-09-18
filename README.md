@@ -28,4 +28,7 @@ install python3 and flask
   Requires: itsdangerous, click, Werkzeug, Jinja2, importlib-metadata
   Required-by: Flask-Cors
 
+check the services files and put the files in the directory mentioned there
+
+
 
