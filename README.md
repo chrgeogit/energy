@@ -16,7 +16,6 @@ install services provided
 
 install python3 and flask
 
-
   Name: Flask
   Version: 2.2.2
   Summary: A simple framework for building complex web applications.
@@ -27,6 +26,18 @@ install python3 and flask
   Location: /usr/local/lib/python3.7/dist-packages
   Requires: itsdangerous, click, Werkzeug, Jinja2, importlib-metadata
   Required-by: Flask-Cors
+
+install database  SQLite 3.x and create "db1" file using below command
+  CREATE TABLE IF NOT EXISTS "mes" (
+        "id"    integer,
+        "volt"  text,
+        "current"       text,
+        "powewr"        text,
+        "energy"        text,
+        "date"  text,
+        PRIMARY KEY("id" AUTOINCREMENT)
+);
+
 
 check the services files and put the files in the directory mentioned there
 
