@@ -1,0 +1,30 @@
+pi@smm:/root $ systemctl cat rs485datacollector.service
+# /etc/systemd/system/rs485datacollector.service
+[Unit]
+Description=collectdata from rs485 energy meteR
+After=multi-user.target
+[Service]
+Type=simple
+RestartSec = 5
+KillMode = process
+SendSIGHUP = no
+ExecStart=/usr/bin/python3  /home/pi/rs485/collectdata7.py
+RestartSec = 5
+[Install]
+WantedBy=multi-user.target
+pi@smm:/root $ systemctl cat rs485dataprojector.service
+# /etc/systemd/system/rs485dataprojector.service
+[Unit]
+Description= visualize collected data from rs485 energy meteR
+After=multi-user.target
+[Service]
+User=root
+WorkingDirectory=/home/pi/rs485
+Type=simple
+RestartSec = 5
+KillMode = process
+SendSIGHUP = no
+ExecStart=flask --app api run --host=0.0.0.0
+RestartSec = 5
+[Install]
+WantedBy=multi-user.target
